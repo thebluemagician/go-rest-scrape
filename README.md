@@ -7,16 +7,16 @@ This is a simple **Go** project which scrapes details like- product name, descri
 This module fetches data from Amazon product catalogue, processes it, structures in the required json.
 
 ### 2. Database
-Handles the request from product module to store the data in database.
+Handles the request from product module to store the data into the database.
 Also has API to get all the stored product details
 
 ## Build and Installation
 
 ### Prerequisites
-The project is developed and tested on following environments and platform:
+The project is developed and tested on the following environment/platform:
 **Sno.** | **Name** | **Version/Config.**
 -------: | :------: | :------------------
-1 | Operating System | Kubuntu 20.10 (Linux iudx 5.8.0-25-generic)
+1 | Operating System | Kubuntu 20.10 (Linux 5.8.0-25-generic)
 2 | Language | go version go1.16.5 linux/amd64
 3 | IDE | Visual Studio Code Version 1.56.2
 4 | Containerization | Docker version 20.10.5, docker-compose version 1.28.5
