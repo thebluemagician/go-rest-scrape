@@ -1,0 +1,142 @@
+{
+	"info": {
+		"_postman_id": "9d49f422-1c5a-4e41-afd2-20291284d869",
+		"name": "go-rest-scrape",
+		"description": "Basic GO Based REST collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "elasticsearch",
+			"item": [
+				{
+					"name": "DeleteIndex",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:9200/amazonproducts",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9200",
+							"path": [
+								"amazonproducts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllDocuments",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\" : {\n        \"match_all\" : {}\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:9200/amazonproducts/_search?filter_path=hits.total.value,hits.hits._source",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9200",
+							"path": [
+								"amazonproducts",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "filter_path",
+									"value": "hits.total.value,hits.hits._source"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GetAllProducts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8086/v1/db/product",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8086",
+					"path": [
+						"v1",
+						"db",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ScrapeProduct",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\":\"https://www.amazon.in/Airdopes-281-Bluetooth-Immersive-Resistance/dp/B084DRKGZ3\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8085/v1/pd/scrape",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8085",
+					"path": [
+						"v1",
+						"pd",
+						"scrape"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
