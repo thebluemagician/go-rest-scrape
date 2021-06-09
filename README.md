@@ -29,7 +29,7 @@ The project is developed and tested on the following environment/platform:
 3. Run docker-compose build and up command 
 
 ```
-cd /path/to/go-rest/scrape
+cd /path/to/go-rest-scrape
 docker-compose build
 docker-compose up #run in foreground
 docker-compose up -d #to run in background
