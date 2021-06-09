@@ -1,5 +1,5 @@
 # go-rest-scrape
-This is a simple **Go** project which scrapes few details like- product name, description, price and review count from the Amazon (amazon.in) India product catalogue and stores in into document oriented database namely **ElasticSearch**.
+This is a simple **Go** project which scrapes details like- product name, description, price and review count from the Amazon (amazon.in) India product catalogue and stores it into document oriented database namely **ElasticSearch**.
 
 ## Project modules
 
