@@ -77,4 +77,5 @@ curl --location --request GET '127.0.0.1:8086/v1/db/product'
     }
 ]
 ```
-
+</br> </br>
+> :warning: Firewall configuration may interfere with download of few dependencies.
