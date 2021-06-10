@@ -2,28 +2,19 @@ package main
 
 import (
 	"context"
-	"net/http"
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"net/http"
 
 	"github.com/gorilla/mux"
 	elastic "github.com/olivere/elastic/v7"
-
 )
 
-var	elasticClient *elastic.Client
-
-type Inner struct {
-	name			string	`json:"name,omitempty"`
-	imageURL		string	`json:"imageURL,omitempty"`
-	desc			string	`json:"description,omitempty"`
-	price			string	`json:"price,omitempty"`
-	totalReviews	int		`json:"totalReviews,omitempty"`
-}
+var elasticClient *elastic.Client
 
 type Outer struct {
-	URL				string	`json:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 }
 
 type ResponseJson struct {
@@ -40,16 +31,16 @@ const mapping = `
 
 func GetESClient() {
 
-	elasticClient, _ =  elastic.NewClient(elastic.SetURL("http://elasticsearch:9200"),
+	elasticClient, _ = elastic.NewClient(elastic.SetURL("http://elasticsearch:9200"),
 		elastic.SetSniff(false),
 		elastic.SetHealthcheck(false))
 
 	log.Println("[elastic] Initialized...")
 }
 
-func createIndex(){
-	
-	ctx := context.Background() 
+func createIndex() {
+
+	ctx := context.Background()
 	exists, err := elasticClient.IndexExists("amazonproducts").Do(ctx)
 	if err != nil {
 		panic(err)
@@ -64,10 +55,10 @@ func createIndex(){
 }
 
 func InsertDocument(response http.ResponseWriter, request *http.Request) {
-	
+
 	createIndex()
-	ctx := context.Background() 
-	
+	ctx := context.Background()
+
 	body, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		http.Error(response, "Error reading request body",
@@ -85,11 +76,11 @@ func InsertDocument(response http.ResponseWriter, request *http.Request) {
 		Filter(termQuery)
 
 	searchResult, err := elasticClient.Search().
-		Index("amazonproducts").   
-		Query(generalQ). 
-		From(0).Size(10).   
-		Pretty(true).    
-		Do(ctx)            
+		Index("amazonproducts").
+		Query(generalQ).
+		From(0).Size(10).
+		Pretty(true).
+		Do(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -102,7 +93,7 @@ func InsertDocument(response http.ResponseWriter, request *http.Request) {
 				Id(hit.Id).
 				BodyJson(string(body)).
 				Do(ctx)
-			
+
 			if err != nil {
 				log.Panic("[elastic] Updating error ", err)
 			}
@@ -123,36 +114,35 @@ func InsertDocument(response http.ResponseWriter, request *http.Request) {
 }
 
 func GetAllDocument(writer http.ResponseWriter, request *http.Request) {
-	
+
 	createIndex()
 	ctx := context.Background()
 
 	matchAllQ := elastic.NewMatchAllQuery()
-	fsc := elastic.NewFetchSourceContext(true).Include("product","url").Exclude("lastUpdate")
+	fsc := elastic.NewFetchSourceContext(true).Include("product", "url").Exclude("lastUpdate")
 
 	searchResult, err := elasticClient.Search().
-		Index("amazonproducts").   
+		Index("amazonproducts").
 		Query(matchAllQ).
 		FetchSourceContext(fsc).
-		Pretty(true).    
-		Do(ctx)  
-		
+		Pretty(true).
+		Do(ctx)
+
 	if err != nil {
-		log.Panic("[elastic] Match query failed" ,err)
-	}          
+		log.Panic("[elastic] Match query failed", err)
+	}
 
 	var rawJSONSlice []json.RawMessage
 	for _, hit := range searchResult.Hits.Hits {
-		rawJSONSlice= append(rawJSONSlice, hit.Source)
+		rawJSONSlice = append(rawJSONSlice, hit.Source)
 	}
-	
 
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
 	json.NewEncoder(writer).Encode(rawJSONSlice)
 }
 
-func main()  {
+func main() {
 
 	GetESClient()
 	router := mux.NewRouter()
