@@ -43,13 +43,13 @@ func createIndex() {
 	ctx := context.Background()
 	exists, err := elasticClient.IndexExists("amazonproducts").Do(ctx)
 	if err != nil {
-		panic(err)
+		log.Fatal("[elastic] Unable to check Index ",err)
 	}
 	if !exists {
 		log.Println("[elastic] Creating Index")
 		_, err := elasticClient.CreateIndex("amazonproducts").BodyString(mapping).Do(ctx)
 		if err != nil {
-			panic(err)
+			log.Panic("[elastic] Error in Index creation: "err)
 		}
 	}
 }
